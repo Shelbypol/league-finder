@@ -15,14 +15,14 @@ const getLeagues = asyncHandler(async (req, res) => {
 // @access  Public
 const createLeague = asyncHandler(async (req, res) => {
     const league = new League({
-        name: 'Sample League',
+        name: req.body.name,
         location: {
-            address: 'Sample Address',
-            city: 'Sample City',
-            postalCode: 'Sample Zip',
-            country: 'Sample Country'
+            address: req.body.address,
+            city: req.body.city,
+            postalCode: req.body.postalCode,
+            country: req.body.country
         },
-        price: 0
+        price: req.body.price
     });
 
     const createdLeague = await league.save();
