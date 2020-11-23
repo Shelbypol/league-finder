@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler'
-import League from "../models/leagueModel";
+import League from '../models/leagueModel.js'
 
 
 // @desc    Fetch all Leagues
@@ -10,5 +10,24 @@ const getLeagues = asyncHandler(async (req, res) => {
     res.json(leagues)
 });
 
+// @desc    CREATE a league
+// @route   POST /api/league
+// @access  Public
+const createLeague = asyncHandler(async (req, res) => {
+    const league = new League({
+        name: '',
+        location: {
+            address: '',
+            city: '',
+            postalCode: '',
+            country: ''
+        },
+        price: 0
+    });
 
-export { getLeagues }
+    const createdLeague = await league.save();
+    res.status(201).json(createdLeague)
+});
+
+
+export { getLeagues, createLeague }

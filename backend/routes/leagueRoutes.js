@@ -1,11 +1,9 @@
 import express from 'express'
-import asyncHandler from 'express-async-handler'
 const router = express.Router();
-import { getLeagues } from "../controllers/leagueController";
+import { getLeagues, createLeague } from "../controllers/leagueController.js";
 
-router.route('/').get(getLeagues);
-
-
-
+router.route('/')
+    .get(getLeagues)
+    .post(createLeague);
 
 export default router

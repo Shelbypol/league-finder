@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import leagues from './data/leagues.js'
-import League from "./models/leagueModel";
+import League from "./models/leagueModel.js";
 import connectDB from './config/db.js'
 
 dotenv.config();

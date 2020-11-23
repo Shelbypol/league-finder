@@ -1,14 +1,16 @@
 {
-  "name": "leagueside_technical",
+  "name": "leagueside-technical",
   "version": "1.0.0",
-  "description": "A little league sponsorship site",
+  "description": "MERN little league sponsorship site",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "data:import": "node backend/seeder",
+    "data:destroy": "node backend/seeder -d"
   },
   "keywords": [],
   "author": "Shelby Polasek",
@@ -22,7 +24,6 @@
   },
   "homepage": "https://github.com/Shelbypol/leagueSponsorshipTechnical#readme",
   "dependencies": {
-    "axios": "^0.21.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
