@@ -2,7 +2,7 @@
   "name": "leagueside-technical",
   "version": "1.0.0",
   "description": "MERN little league sponsorship site",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node backend/server",

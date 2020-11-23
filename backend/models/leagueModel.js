@@ -1,9 +1,5 @@
 import mongoose from 'mongoose'
 
-//     A league name.
-//     A latitude/longitude pair.
-//     A single price to purchase their sponsorship opportunity.
-
 const leagueSchema = mongoose.Schema({
     name: {
         type: String,

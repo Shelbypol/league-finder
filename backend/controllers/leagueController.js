@@ -9,6 +9,9 @@ const getLeagues = asyncHandler(async (req, res) => {
     res.json(leagues)
 });
 
+
+
+
 // @desc    CREATE a league
 // @route   POST /api/league
 // @access  Public

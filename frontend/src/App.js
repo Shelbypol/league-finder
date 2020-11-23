@@ -1,14 +1,17 @@
 import React from 'react'
-import { Provider } from 'react-redux'
-import store from './store'
-import './App.css';
+import {BrowserRouter as Router, Route} from 'react-router-dom'
+import {Container} from 'react-bootstrap'
 import HomeScreen from './screens/HomeScreen'
 
 function App() {
     return (
-        <Provider store={store}>
-            <HomeScreen/>
-        </Provider>
+        <Router>
+            <main className='py-3'>
+                <Container>
+                    <Route path='/' component={HomeScreen} />
+                </Container>
+            </main>
+        </Router>
     );
 }
 
