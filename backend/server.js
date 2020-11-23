@@ -20,9 +20,6 @@ app.get('/', (req, res) => {
 
 app.use('/api/leagues', leagueRoutes);
 
-// const __dirname = path.resolve();
-// app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
-
 // 404 not found
 app.use(notFound);
 
