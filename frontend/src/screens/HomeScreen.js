@@ -19,7 +19,7 @@ const HomeScreen = () => {
 
     return (
         <>
-            <h1>Leagues</h1>
+            <h1>Available Leagues</h1>
             {loading ?
                 (<Loader/>)
                 : error ?
@@ -35,6 +35,7 @@ const HomeScreen = () => {
                         </Row>
                     )
             }
+
         </>
     )
 };

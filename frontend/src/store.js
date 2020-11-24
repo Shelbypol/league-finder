@@ -1,10 +1,12 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { leagueListReducer } from './reducers/leagueReducers';
+import { leagueListReducer, leagueCreateReducer, leagueDetailsReducer  } from './reducers/leagueReducers';
 
 const reducer = combineReducers({
-    leagueList: leagueListReducer
+    leagueList: leagueListReducer,
+    leagueDetails: leagueDetailsReducer,
+    leagueCreate: leagueCreateReducer,
 });
 
 const initialState = {};
