@@ -33,9 +33,9 @@ const HomeScreen = ({history}) => {
     const {loading: loadingDelete, error: errorDelete, success: successDelete} = leagueDelete;
 
     useEffect(() => {
+        dispatch({type: LEAGUE_CREATE_RESET});
         dispatch(listLeagues());
 
-        dispatch({type: LEAGUE_CREATE_RESET});
 
         if (successCreate) {
             history.push(`/addleague/${createdLeague._id}`)
@@ -52,9 +52,9 @@ const HomeScreen = ({history}) => {
 
     // DELETE LEAGUE HANDLER
     const deleteHandler = (id) => {
-        if (window.confirm('Are you sure you want to delete this league?')) {
+        // if (window.confirm('Are you sure you want to delete this league?')) {
             dispatch(deleteLeague(id));
-        }
+        // }
     };
 
     // SPONSOR LEAGUE FORM HANDLER

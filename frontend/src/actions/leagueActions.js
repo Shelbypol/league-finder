@@ -64,7 +64,7 @@ export const listLeagueDetails = (id) => async (dispatch) => {
 
 
 // ======================== CREATE LEAGUE
-export const createLeague = () => async (dispatch, getState) => {
+export const createLeague = () => async (dispatch) => {
     try {
         dispatch({
             type: LEAGUE_CREATE_REQUEST,
