@@ -24,9 +24,10 @@ export const listLeagues = () => async (dispatch) => {
 
         const { data } = await axios.get(`/api/leagues`);
 
+        // data.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
         dispatch ({
             type: LEAGUE_LIST_SUCCESS,
-            payload: data
+            payload: data.sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
         })
 
     } catch(error){

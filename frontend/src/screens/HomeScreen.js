@@ -69,7 +69,29 @@ const HomeScreen = ({history}) => {
     const submitSponsorReqHandler = () => {
         setSponsorBtn(!sponsorBtn);
         setSponsorReq(!sponsorReq);
+        // ascendingPrice()
     };
+
+
+    // SORT LEAGUES PRICE / ASCENDING ORDER
+    // const ascendingPrice = () => {
+    //     // leagues.sort(function(a, b){return a-b});
+    //     // const sortedLeagues = [...leagues].sort();
+    //    const sortedLeagues = leagues.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+    //     console.log(sortedLeagues);
+    // };
+
+
+
+    // const budgetCalc = () => {
+    //   let sponsorBudgetBucket = sponsorBudget;
+    //
+    //   for(sponsorBudgetBucket; sponsorBudgetBucket >= 0; sponsorBudgetBucket -= league.price ){
+    //       if(sponsorBudgetBucket >= 0){
+    //           console.log(league.name)
+    //       }
+    //   }
+    // };
 
     return (
         <>
@@ -209,7 +231,7 @@ const HomeScreen = ({history}) => {
             {/*======== SPONSOR SEARCH REQUIREMENTS ========*/}
             {sponsorReq ? (
                 <>
-                    <h5>Search Requirements</h5>
+                    <h5>Sponsor Search Requirements</h5>
                     <Table striped bordered hover responsive className='table-sm mb-5'>
                         <thead>
                         <tr>
