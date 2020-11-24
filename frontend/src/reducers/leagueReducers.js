@@ -9,6 +9,10 @@ import {
     LEAGUE_CREATE_SUCCESS,
     LEAGUE_CREATE_FAIL,
     LEAGUE_CREATE_RESET,
+    LEAGUE_UPDATE_REQUEST,
+    LEAGUE_UPDATE_SUCCESS,
+    LEAGUE_UPDATE_FAIL,
+    LEAGUE_UPDATE_RESET
 } from '../constants/leagueConstants';
 
 // LEAGUE LIST REDUCER
@@ -55,4 +59,21 @@ export const leagueCreateReducer = (state = {}, action) => {
             return state
     }
 };
+
+// LEAGUE UPDATE REDUCER
+export const leagueUpdateReducer = (state = { product: {} }, action) => {
+    switch(action.type){
+        case LEAGUE_UPDATE_REQUEST:
+            return { loading: true };
+        case LEAGUE_UPDATE_SUCCESS:
+            return { loading: false, success: true, product: action.payload };
+        case LEAGUE_UPDATE_FAIL:
+            return { loading: false, error: action.payload };
+        case LEAGUE_UPDATE_RESET:
+            return { product: {} };
+        default:
+            return state
+    }
+};
+
 

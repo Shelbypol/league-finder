@@ -1,101 +1,67 @@
 import axios from 'axios'
 import React, {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
-import {Form, Button} from 'react-bootstrap'
+import {Form, Button, Container} from 'react-bootstrap'
 import {useDispatch, useSelector} from 'react-redux'
-import Message from '../components/Message'
 import Loader from '../components/Loader'
-import FormContainer from "../components/FormContainer";
-import { listProductDetails, updateProduct } from "../actions/productActions";
-import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
+import { LEAGUE_UPDATE_RESET } from '../constants/leagueConstants';
+import {updateLeague} from "../actions/leagueActions";
 
 
 const AddLeagueScreen = ({ match, history }) => {
-    const productId = match.params.id;
+    const leagueId = match.params.id;
 
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
     const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
+    const [postal, setPostal] = useState('');
+    const [country, setCountry] = useState('');
 
     const dispatch = useDispatch();
 
-    const productDetails = useSelector(state => state.productDetails);
-    const { loading, error, product } = productDetails;
+    const leagueDetails = useSelector(state => state.leagueDetails);
+    const { loading, error, league } = leagueDetails;
 
-    const productUpdate = useSelector(state => state.productUpdate);
-    const { loading: loadingUpdate, error: errorUpdate , success: successUpdate } = productUpdate;
-
+    const leagueUpdate = useSelector(state => state.leagueUpdate);
+    const { loading: loadingUpdate, error: errorUpdate , success: successUpdate } = leagueUpdate;
 
     useEffect(() => {
 
         if(successUpdate){
-            dispatch({ type: PRODUCT_UPDATE_RESET });
-            history.push('/admin/productlist');
-        } else {
-            if (!product.name || product._id !== productId) {
-                dispatch(listProductDetails(productId))
-            } else {
-                setName(product.name);
-                setPrice(product.price);
-                setImage(product.image);
-                setBrand(product.brand);
-                setCategory(product.category);
-                setCountInStock(product.category);
-                setDescription(product.description);
-            }
+            dispatch({ type: LEAGUE_UPDATE_RESET });
+            history.push('/');
         }
-    }, [product, dispatch, productId, history, successUpdate]);
-
-    const uploadFileHandler = async (e) => {
-        const file = e.target.files[0];
-        const formData = new FormData();
-        formData.append('image', file);
-        setUploading(true);
-
-        try{
-            const config = {
-                headers: {
-                    'Content-Type': 'mulitpart/form-data'
-                }
-            };
-
-            const { data } = await  axios.post('/api/upload', formData, config);
-
-            setImage(data);
-            setUploading(false)
-        }catch (error) {
-            console.error(error);
-            setUploading(false)
-        }
-    };
+    }, [league, dispatch, leagueId, history, successUpdate]);
 
     const submitHandler = (e) => {
         e.preventDefault();
         dispatch(
-            updateProduct({
-                _id: productId,
+            updateLeague({
+                _id: leagueId,
                 name,
                 price,
-                image,
-                brand,
-                category,
-                description,
-                countInStock
+                location: {
+                    address,
+                    city,
+                    postal,
+                    country
+                }
             }))
     };
 
     return (
         <>
-            <Link to='/admin/productlist' className='btn btn-light my-3'>
+            <Link to='/' className='btn btn-light my-3'>
                 Go Back
             </Link>
-            <FormContainer>
-                <h1>Edit Product</h1>
+            <Container>
+                <h1>Add League</h1>
                 {loadingUpdate && <Loader />}
-                {errorUpdate && <Message variant='danger'>{errorUpdate}</Message> }
+                {errorUpdate && <p>{errorUpdate}</p> }
                 {loading && <Loader />}
-                {loading && <Message variant='danger'>{error}</Message> }
-                {loading ? <Loader/> : error ? <Message variant='danger'>{error}</Message> : (
+                {loading && <p>{error}</p> }
+                {loading ? <Loader/> : error ? <p>{error}</p> : (
 
                     <Form onSubmit={submitHandler}>
                         {/* NAME */}
@@ -116,66 +82,51 @@ const AddLeagueScreen = ({ match, history }) => {
                                           onChange={(e) => setPrice(e.target.value)}>
                             </Form.Control>
                         </Form.Group>
-                        {/* IMAGE */}
-                        <Form.Group controlId='image'>
-                            <Form.Label>Image</Form.Label>
+                        {/* ADDRESS */}
+                        <Form.Group controlId='address'>
+                            <Form.Label>Street Address</Form.Label>
                             <Form.Control type='text'
-                                          placeholder='Enter image url'
-                                          value={image}
-                                          onChange={(e) => setImage(e.target.value)}>
-                            </Form.Control>
-                            <Form.File id='image-file'
-                                       label='Choose File'
-                                       custom
-                                       onChange={uploadFileHandler}
-                            > </Form.File>
-                            {uploading && <Loader />}
-                        </Form.Group>
-                        {/* BRAND */}
-                        <Form.Group controlId='brand'>
-                            <Form.Label>Brand</Form.Label>
-                            <Form.Control type='text'
-                                          placeholder='Enter brand'
-                                          value={brand}
-                                          onChange={(e) => setBrand(e.target.value)}>
+                                          placeholder='Enter street address'
+                                          value={address}
+                                          onChange={(e) => setAddress(e.target.value)}>
                             </Form.Control>
                         </Form.Group>
-                        {/* COUNT IN STOCK*/}
-                        <Form.Group controlId='countInStock'>
-                            <Form.Label>Count In Stock</Form.Label>
-                            <Form.Control type='number'
-                                          placeholder='Enter count in stock'
-                                          value={countInStock}
-                                          onChange={(e) => setCountInStock(e.target.value)}>
+                        {/* CITY */}
+                        <Form.Group controlId='city'>
+                            <Form.Label>City</Form.Label>
+                            <Form.Control type='text'
+                                          placeholder='Enter city'
+                                          value={city}
+                                          onChange={(e) => setCity(e.target.value)}>
                             </Form.Control>
                         </Form.Group>
-                        {/* CATEGORIES */}
-                        <Form.Group controlId='category'>
-                            <Form.Label>Category</Form.Label>
+                        {/* POSTAL CODE */}
+                        <Form.Group controlId='postalCode'>
+                            <Form.Label>Zip Code</Form.Label>
                             <Form.Control type='text'
-                                          placeholder='Enter category'
-                                          value={category}
-                                          onChange={(e) => setCategory(e.target.value)}>
+                                          placeholder='Enter zip code'
+                                          value={postal}
+                                          onChange={(e) => setPostal(e.target.value)}>
                             </Form.Control>
                         </Form.Group>
-                        {/* DESCRIPTION */}
-                        <Form.Group controlId='description'>
-                            <Form.Label>Description</Form.Label>
+                        {/* COUNTRY */}
+                        <Form.Group controlId='country'>
+                            <Form.Label>Country</Form.Label>
                             <Form.Control type='text'
-                                          placeholder='Enter description'
-                                          value={description}
-                                          onChange={(e) => setDescription(e.target.value)}>
+                                          placeholder='Enter country'
+                                          value={country}
+                                          onChange={(e) => setCountry(e.target.value)}>
                             </Form.Control>
                         </Form.Group>
 
 
-                        <Button type='submit' variant='primary'>Update</Button>
+                        <Button type='submit' variant='primary'>Add League</Button>
                     </Form>
                 ) }
-            </FormContainer>
+            </Container>
         </>
 
     )
 };
 
-export default ProductEditScreen
+export default AddLeagueScreen

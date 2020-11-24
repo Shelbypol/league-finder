@@ -9,27 +9,38 @@ const getLeagues = asyncHandler(async (req, res) => {
     res.json(leagues)
 });
 
+// @desc    Fetch single league
+// @route   GET /api/leagues/:id
+// @access  Public
+const getLeagueById = asyncHandler(async (req, res) => {
+    const league = await League.findById(req.params.id);
 
-
+    if (league) {
+        res.json(league)
+    }else{
+        res.status(404);
+        throw new Error('League not found')
+    }
+});
 
 // @desc    CREATE a league
-// @route   POST /api/league
+// @route   POST /api/leagues
 // @access  Public
-// const createLeague = asyncHandler(async (req, res) => {
-//     const league = new League({
-//         name: req.body.name,
-//         location: {
-//             address: req.body.address,
-//             city: req.body.city,
-//             postalCode: req.body.postalCode,
-//             country: req.body.country
-//         },
-//         price: req.body.price
-//     });
-//
-//     const createdLeague = await league.save();
-//     res.status(201).json(createdLeague)
-// });
+const createLeague = asyncHandler(async (req, res) => {
+    const product = new League({
+        name: 'Enter League Name',
+        price: 0,
+        location: {
+            address: 'Enter Street Address',
+            city: 'Enter City',
+            postalCode: 'Enter Zip',
+            country: 'Enter Country'
+        }
+    });
+
+    const createdProduct = await product.save();
+    res.status(201).json(createdProduct)
+});
 
 
-export { getLeagues }
+export { getLeagues, getLeagueById, createLeague }
