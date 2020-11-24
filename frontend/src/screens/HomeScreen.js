@@ -23,7 +23,6 @@ const HomeScreen = ({history}) => {
     const leagueDelete = useSelector(state => state.leagueDelete);
     const {loading: loadingDelete, error: errorDelete, success: successDelete} = leagueDelete;
 
-
     useEffect(() => {
         dispatch(listLeagues());
 
@@ -35,14 +34,14 @@ const HomeScreen = ({history}) => {
             dispatch(listLeagues())
         }
 
-    }, [dispatch, history, successCreate, createdLeague]);
+    }, [dispatch, history, successCreate, createdLeague, successDelete]);
 
     const createLeagueHandler = () => {
         dispatch(createLeague())
     };
 
     const deleteHandler = (id) => {
-        if(window.confirm('Are you sure you want to delete this product?')) {
+        if(window.confirm('Are you sure you want to delete this league?')) {
             dispatch(deleteLeague(id));
         }
     };
@@ -73,7 +72,6 @@ const HomeScreen = ({history}) => {
                     (<p> {error} </p>)
                     :
                     (
-
                         <Table striped bordered hover responsive className='table-sm mb-5'>
                             <thead>
                             <tr>
@@ -91,7 +89,7 @@ const HomeScreen = ({history}) => {
                                     <td>{league.location.city}, {league.location.state}</td>
                                     <td>
                                     <Button variant='danger' className='btn-sm' onClick={()=> deleteHandler(league._id)}>
-                                        X
+                                        x
                                     </Button>
                                     </td>
                                 </tr>

@@ -123,7 +123,7 @@ export const updateLeague = (league) => async (dispatch, getState) => {
 
 
 // ======================== DELETE LEAGUE
-export const deleteLeague = (id) => async (dispatch, getState) => {
+export const deleteLeague = (id) => async (dispatch) => {
     try {
         dispatch({
             type: LEAGUE_DELETE_REQUEST,
