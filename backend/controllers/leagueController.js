@@ -42,5 +42,41 @@ const createLeague = asyncHandler(async (req, res) => {
     res.status(201).json(createdProduct)
 });
 
+// @desc    UPDATE league
+// @route   PUT /api/leagues/:id
+// @access  Public
+const updateLeague = asyncHandler(async (req, res) => {
+    const {
+        name,
+        price,
+        location: {
+            address,
+            city,
+            postalCode,
+            country,
+        }
+    } = req.body;
 
-export { getLeagues, getLeagueById, createLeague }
+    const league = await League.findById(req.params.id);
+
+    if(league){
+        league.name = name;
+        league.price = price;
+        league.location.address = address;
+        league.location.city = city;
+        league.location.postalCode = postalCode;
+        league.location.country = country;
+
+        const updatedLeague = await league.save();
+        res.json(updatedLeague)
+
+    } else {
+        res.status(404);
+        throw new Error('League not found')
+    }
+
+});
+
+
+
+export { getLeagues, getLeagueById, createLeague, updateLeague }

@@ -31,13 +31,16 @@ const AddLeagueScreen = ({ match, history }) => {
             dispatch({type: LEAGUE_UPDATE_RESET});
             history.push('/');
         } else {
+            if (league._id === leagueId) {
+                dispatch(listLeagueDetails(leagueId))
+            } else {
                 setName(league.name);
                 setPrice(league.price);
                 setCity(league.city);
                 setAddress(league.address);
                 setPostal(league.postalCode);
                 setCountry(league.country);
-
+            }
         }
     }, [league, dispatch, leagueId, history, successUpdate]);
 
@@ -46,15 +49,16 @@ const AddLeagueScreen = ({ match, history }) => {
         dispatch(
             updateLeague({
                 _id: leagueId,
-                name,
-                price,
+                name: name,
+                price:price,
                 location: {
-                    address,
-                    city,
-                    postal,
-                    country
+                    address: address,
+                    city: city,
+                    postalCode: postal,
+                    country: country
                 }
-            }))
+            }));
+        history.push('/');
     };
 
     return (
