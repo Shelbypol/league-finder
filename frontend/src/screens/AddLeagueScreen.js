@@ -5,7 +5,7 @@ import {Form, Button, Container} from 'react-bootstrap'
 import {useDispatch, useSelector} from 'react-redux'
 import Loader from '../components/Loader'
 import { LEAGUE_UPDATE_RESET } from '../constants/leagueConstants';
-import {updateLeague} from "../actions/leagueActions";
+import {listLeagueDetails, updateLeague} from "../actions/leagueActions";
 
 
 const AddLeagueScreen = ({ match, history }) => {
@@ -27,10 +27,17 @@ const AddLeagueScreen = ({ match, history }) => {
     const { loading: loadingUpdate, error: errorUpdate , success: successUpdate } = leagueUpdate;
 
     useEffect(() => {
-
-        if(successUpdate){
-            dispatch({ type: LEAGUE_UPDATE_RESET });
+        if (successUpdate) {
+            dispatch({type: LEAGUE_UPDATE_RESET});
             history.push('/');
+        } else {
+                setName(league.name);
+                setPrice(league.price);
+                setCity(league.city);
+                setAddress(league.address);
+                setPostal(league.postalCode);
+                setCountry(league.country);
+
         }
     }, [league, dispatch, leagueId, history, successUpdate]);
 
