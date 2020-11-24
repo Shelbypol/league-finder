@@ -28,13 +28,14 @@ const getLeagueById = asyncHandler(async (req, res) => {
 // @access  Public
 const createLeague = asyncHandler(async (req, res) => {
     const product = new League({
-        name: 'Enter League Name',
+        name: 'Name',
         price: 0,
         location: {
-            address: 'Enter Street Address',
-            city: 'Enter City',
-            postalCode: 'Enter Zip',
-            country: 'Enter Country'
+            address: 'Address',
+            city: 'City',
+            state: 'State',
+            postalCode: 'Zip code',
+            country: 'United States'
         }
     });
 
@@ -76,7 +77,6 @@ const updateLeague = asyncHandler(async (req, res) => {
     }
 
 });
-
 
 
 export { getLeagues, getLeagueById, createLeague, updateLeague }

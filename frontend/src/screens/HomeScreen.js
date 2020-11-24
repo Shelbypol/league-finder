@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux';
-import League from '../components/League';
 import Loader from '../components/Loader';
 import {Col, Row, Button, Table } from 'react-bootstrap';
 import {createLeague, listLeagues} from '../actions/leagueActions';
@@ -36,8 +35,7 @@ const HomeScreen = ({ history }) => {
 
     return (
         <>
-            <h1>Available Leagues</h1>
-            {/*<>*/}
+            <h1>All Available Leagues</h1>
                 <Row className='align-items-center'>
                     <Col className='text-right'>
                         <Button className='my-3' onClick={createLeagueHandler}>
@@ -45,7 +43,6 @@ const HomeScreen = ({ history }) => {
                         </Button>
                     </Col>
                 </Row>
-            {/*</>*/}
             {loading ?
                 (<Loader/>)
                 : error ?
@@ -58,7 +55,7 @@ const HomeScreen = ({ history }) => {
                             <tr>
                                 <th>NAME</th>
                                 <th>PRICE</th>
-                                <th>Location</th>
+                                <th>LOCATION</th>
                                 <th> </th>
                             </tr>
                             </thead>
@@ -67,7 +64,7 @@ const HomeScreen = ({ history }) => {
                                 <tr key={league._id}>
                                     <td>{league.name}</td>
                                     <td>${league.price}</td>
-                                    <td>{league.location.address}, {league.location.city}, {league.location.postalCode}, {league.location.country}</td>
+                                    <td>{league.location.city}, {league.location.state}</td>
                                     {/*<td>*/}
                                         {/*<LinkContainer to={`/admin/product/${product._id}/edit`}>*/}
                                         {/*    <Button variant='light' className='btn-sm'>*/}

@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import {Form, Button, Container} from 'react-bootstrap'
@@ -15,6 +14,7 @@ const AddLeagueScreen = ({ match, history }) => {
     const [price, setPrice] = useState(0);
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
+    const [state, setState] = useState('');
     const [postal, setPostal] = useState('');
     const [country, setCountry] = useState('');
 
@@ -37,6 +37,7 @@ const AddLeagueScreen = ({ match, history }) => {
                 setName(league.name);
                 setPrice(league.price);
                 setCity(league.city);
+                setState(league.state);
                 setAddress(league.address);
                 setPostal(league.postalCode);
                 setCountry(league.country);
@@ -54,6 +55,7 @@ const AddLeagueScreen = ({ match, history }) => {
                 location: {
                     address: address,
                     city: city,
+                    state: state,
                     postalCode: postal,
                     country: country
                 }
@@ -63,9 +65,6 @@ const AddLeagueScreen = ({ match, history }) => {
 
     return (
         <>
-            <Link to='/' className='btn btn-light my-3'>
-                Go Back
-            </Link>
             <Container>
                 <h1>Add League</h1>
                 {loadingUpdate && <Loader />}
@@ -77,9 +76,9 @@ const AddLeagueScreen = ({ match, history }) => {
                     <Form onSubmit={submitHandler}>
                         {/* NAME */}
                         <Form.Group controlId='name'>
-                            <Form.Label>Name</Form.Label>
+                            <Form.Label>League Name</Form.Label>
                             <Form.Control type='name'
-                                          placeholder='Enter name'
+                                          placeholder='Enter League name'
                                           value={name}
                                           onChange={(e) => setName(e.target.value)}>
                             </Form.Control>
@@ -109,6 +108,15 @@ const AddLeagueScreen = ({ match, history }) => {
                                           placeholder='Enter city'
                                           value={city}
                                           onChange={(e) => setCity(e.target.value)}>
+                            </Form.Control>
+                        </Form.Group>
+                        {/* STATE */}
+                        <Form.Group controlId='state'>
+                            <Form.Label>State</Form.Label>
+                            <Form.Control type='text'
+                                          placeholder='Enter state'
+                                          value={state}
+                                          onChange={(e) => setState(e.target.value)}>
                             </Form.Control>
                         </Form.Group>
                         {/* POSTAL CODE */}
