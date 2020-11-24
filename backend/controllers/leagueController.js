@@ -9,20 +9,6 @@ const getLeagues = asyncHandler(async (req, res) => {
     res.json(leagues)
 });
 
-// @desc    Fetch single league
-// @route   GET /api/leagues/:id
-// @access  Public
-const getLeagueById = asyncHandler(async (req, res) => {
-    const league = await League.findById(req.params.id);
-
-    if (league) {
-        res.json(league)
-    }else{
-        res.status(404);
-        throw new Error('League not found')
-    }
-});
-
 // @desc    CREATE a league
 // @route   POST /api/leagues
 // @access  Public
@@ -53,6 +39,7 @@ const updateLeague = asyncHandler(async (req, res) => {
         location: {
             address,
             city,
+            state,
             postalCode,
             country,
         }
@@ -65,6 +52,7 @@ const updateLeague = asyncHandler(async (req, res) => {
         league.price = price;
         league.location.address = address;
         league.location.city = city;
+        league.location.state = state;
         league.location.postalCode = postalCode;
         league.location.country = country;
 
@@ -79,4 +67,4 @@ const updateLeague = asyncHandler(async (req, res) => {
 });
 
 
-export { getLeagues, getLeagueById, createLeague, updateLeague }
+export { getLeagues, createLeague, updateLeague }

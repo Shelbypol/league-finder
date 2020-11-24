@@ -28,6 +28,7 @@ const leagues = [
         location: {
             address: '13330 Kyle Seale Pkwy Lane',
             city: 'San Antonio',
+            state: 'Texas',
             postalCode: '78249',
             country: 'United States'
         },
@@ -38,6 +39,7 @@ const leagues = [
         location: {
             address: '13380 Pecan Glade',
             city: 'San Antonio',
+            state: 'Texas',
             postalCode: '78249',
             country: 'United States'
         },
