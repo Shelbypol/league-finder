@@ -11,7 +11,10 @@ import {
     LEAGUE_CREATE_FAIL,
     LEAGUE_UPDATE_REQUEST,
     LEAGUE_UPDATE_SUCCESS,
-    LEAGUE_UPDATE_FAIL
+    LEAGUE_UPDATE_FAIL,
+    LEAGUE_DELETE_REQUEST,
+    LEAGUE_DELETE_SUCCESS,
+    LEAGUE_DELETE_FAIL
 } from '../constants/leagueConstants';
 
 // ======================= LEAGUE LIST
@@ -113,6 +116,32 @@ export const updateLeague = (league) => async (dispatch, getState) => {
                 : error.message;
         dispatch({
             type: LEAGUE_UPDATE_FAIL,
+            payload: message,
+        })
+    }
+};
+
+
+// ======================== DELETE LEAGUE
+export const deleteLeague = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: LEAGUE_DELETE_REQUEST,
+        });
+
+        await axios.delete(`/api/leagues/${id}`);
+
+        dispatch({
+            type: LEAGUE_DELETE_SUCCESS,
+        });
+
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({
+            type: LEAGUE_DELETE_FAIL,
             payload: message,
         })
     }

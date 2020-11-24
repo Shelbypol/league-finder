@@ -63,8 +63,22 @@ const updateLeague = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error('League not found')
     }
-
 });
 
 
-export { getLeagues, createLeague, updateLeague }
+// @desc    DELETE leagues
+// @route   DELETE /api/leagues/:id
+// @access  Public
+const deleteLeague = asyncHandler(async (req, res) => {
+    const league = await League.findById(req.params.id);
+
+    if (league) {
+        await league.remove();
+        res.json({ message: 'League removed'})
+    }else{
+        res.status(404);
+        throw new Error('League not found')
+    }
+});
+
+export { getLeagues, createLeague, updateLeague, deleteLeague }

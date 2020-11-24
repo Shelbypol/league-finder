@@ -12,7 +12,10 @@ import {
     LEAGUE_UPDATE_REQUEST,
     LEAGUE_UPDATE_SUCCESS,
     LEAGUE_UPDATE_FAIL,
-    LEAGUE_UPDATE_RESET
+    LEAGUE_UPDATE_RESET,
+    LEAGUE_DELETE_REQUEST,
+    LEAGUE_DELETE_SUCCESS,
+    LEAGUE_DELETE_FAIL
 } from '../constants/leagueConstants';
 
 // LEAGUE LIST REDUCER
@@ -71,6 +74,20 @@ export const leagueUpdateReducer = (state = { product: {} }, action) => {
             return { loading: false, error: action.payload };
         case LEAGUE_UPDATE_RESET:
             return { product: {} };
+        default:
+            return state
+    }
+};
+
+// DELETE LEAGUE
+export const leagueDeleteReducer = (state = {}, action) => {
+    switch(action.type){
+        case LEAGUE_DELETE_REQUEST:
+            return { loading: true };
+        case LEAGUE_DELETE_SUCCESS:
+            return { loading: false, success: true };
+        case LEAGUE_DELETE_FAIL:
+            return { loading: false, error: action.payload };
         default:
             return state
     }
