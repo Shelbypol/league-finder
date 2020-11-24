@@ -7,19 +7,27 @@ import {LEAGUE_CREATE_RESET} from '../constants/leagueConstants';
 
 const HomeScreen = ({history}) => {
 
+    // COMPONENT STATE
     const [sponsorBtn, setSponsorBtn] = useState(false);
+    const [sponsorBudget, setSponsorBudget] = useState(0);
+    const [sponsorRadius, setSponsorRadius] = useState(0);
+    const [sponsorAddress, setSponsorAddress] = useState('');
+    const [sponsorCity, setSponsorCity] = useState('');
+    const [sponsorState, setSponsorState] = useState('');
+    const [sponsorPostal, setSponsorPostal] = useState('');
+    const [sponsorCountry, setSponsorCountry] = useState('');
 
     const dispatch = useDispatch();
 
-    // List leagues state
+    // LIST LEAGUE STATE
     const leagueList = useSelector(state => state.leagueList);
     const {loading, error, leagues} = leagueList;
 
-    // Create leagues state
+    // CREATE LEAGUE STATE
     const leagueCreate = useSelector(state => state.leagueCreate);
     const {loading: loadingCreate, error: errorCreate, success: successCreate, league: createdLeague} = leagueCreate;
 
-    // Delete leagues state
+    // DELETE LEAGUE STATE
     const leagueDelete = useSelector(state => state.leagueDelete);
     const {loading: loadingDelete, error: errorDelete, success: successDelete} = leagueDelete;
 
@@ -36,18 +44,25 @@ const HomeScreen = ({history}) => {
 
     }, [dispatch, history, successCreate, createdLeague, successDelete]);
 
+    // CREATE LEAGUE HANDLER
     const createLeagueHandler = () => {
         dispatch(createLeague())
     };
 
+    // DELETE LEAGUE HANDLER
     const deleteHandler = (id) => {
         if(window.confirm('Are you sure you want to delete this league?')) {
             dispatch(deleteLeague(id));
         }
     };
 
+    // SPONSOR LEAGUE FORM HANDLER
     const sponsorBtnHandler = () => {
         setSponsorBtn(!sponsorBtn);
+    };
+
+    const submitSponsorReqHandler = () => {
+        setSponsorBtn(!sponsorBtn)
     };
 
     return (
@@ -65,6 +80,9 @@ const HomeScreen = ({history}) => {
             </Row>
             { loadingDelete && <Loader /> }
             { errorDelete && <p>{errorDelete}</p> }
+
+            { loadingCreate && <Loader /> }
+            { errorCreate && <p>{errorCreate}</p> }
 
             {loading ?
                 (<Loader/>)
@@ -104,73 +122,71 @@ const HomeScreen = ({history}) => {
             {sponsorBtn && (
                 <Col>
                     <>
-                        <Form>
+                        <Form onSubmit={submitSponsorReqHandler}>
                             <h4>Enter Search Requirements</h4>
+                            <i>( search for leagues within your budget and search radius )</i>
                             {/* BUDGET */}
                             <Form.Group controlId='budget'>
-                                <Form.Label>Budget</Form.Label>
+                                <Form.Label><strong>Budget</strong></Form.Label>
                                 <Form.Control type='budget'
                                               placeholder='Enter budget'
-                                    // onChange={(e) => setPrice(e.target.value)}
+                                              onChange={(e) => setSponsorBudget(e.target.value)}
                                 >
                                 </Form.Control>
                             </Form.Group>
 
                             {/* RADIUS */}
                             <Form.Group controlId='radius'>
-                                <Form.Label>Search Radius</Form.Label>
+                                <Form.Label><strong>Search Radius</strong><i>( in miles )</i></Form.Label>
                                 <Form.Control type='radius'
                                               placeholder='Enter search radius'
-                                    // onChange={(e) => setPrice(e.target.value)}
+                                              onChange={(e) => setSponsorRadius(e.target.value)}
                                 >
                                 </Form.Control>
                             </Form.Group>
 
                             {/* ADDRESS */}
                             <Form.Group controlId='address'>
-                                <Form.Label>Street Address</Form.Label>
+                                <Form.Label><strong>Street Address</strong></Form.Label>
                                 <Form.Control type='text'
                                               placeholder='Enter street address'
-                                    // onChange={(e) => setAddress(e.target.value)}
+                                              onChange={(e) => setSponsorAddress(e.target.value)}
                                 >
                                 </Form.Control>
                             </Form.Group>
                             {/* CITY */}
                             <Form.Group controlId='city'>
-                                <Form.Label>City</Form.Label>
+                                <Form.Label><strong>City</strong></Form.Label>
                                 <Form.Control type='text'
                                               placeholder='Enter city'
-                                    // onChange={(e) => setCity(e.target.value)}
+                                              onChange={(e) => setSponsorCity(e.target.value)}
                                 >
                                 </Form.Control>
                             </Form.Group>
                             {/* STATE */}
                             <Form.Group controlId='state'>
-                                <Form.Label>State</Form.Label>
+                                <Form.Label><strong>State</strong></Form.Label>
                                 <Form.Control type='text'
                                               placeholder='Enter state'
-
-                                    // onChange={(e) => setState(e.target.value)}
+                                              onChange={(e) => setSponsorState(e.target.value)}
                                 >
                                 </Form.Control>
                             </Form.Group>
                             {/* POSTAL CODE */}
                             <Form.Group controlId='postalCode'>
-                                <Form.Label>Zip Code</Form.Label>
+                                <Form.Label><strong>Zip Code</strong></Form.Label>
                                 <Form.Control type='text'
                                               placeholder='Enter zip code'
-
-                                    // onChange={(e) => setPostal(e.target.value)}
+                                              onChange={(e) => setSponsorPostal(e.target.value)}
                                 >
                                 </Form.Control>
                             </Form.Group>
                             {/* COUNTRY */}
                             <Form.Group controlId='country'>
-                                <Form.Label>Country</Form.Label>
+                                <Form.Label><strong>Country</strong></Form.Label>
                                 <Form.Control type='text'
                                               placeholder='Enter country'
-
-                                    // onChange={(e) => setCountry(e.target.value)}
+                                              onChange={(e) => setSponsorCountry(e.target.value)}
                                 >
                                 </Form.Control>
                             </Form.Group>
@@ -183,6 +199,24 @@ const HomeScreen = ({history}) => {
             )
             }
 
+            {/*======== SPONSOR SUBMITTED INFO ========*/}
+            <h5>Search Requirements</h5>
+            <Table striped bordered hover responsive className='table-sm mb-5'>
+                <thead>
+                <tr>
+                    <th>BUDGET</th>
+                    <th>RADIUS</th>
+                    <th>LOCATION</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{sponsorBudget}</td>
+                        <td>{sponsorRadius}</td>
+                        <td>{sponsorAddress}, {sponsorState}</td>
+                    </tr>
+                </tbody>
+            </Table>
 
         </>
     )
