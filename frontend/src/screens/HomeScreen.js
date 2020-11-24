@@ -9,6 +9,7 @@ const HomeScreen = ({history}) => {
 
     // COMPONENT STATE
     const [sponsorBtn, setSponsorBtn] = useState(false);
+    const [sponsorReq, setSponsorReq] = useState(false);
     const [sponsorBudget, setSponsorBudget] = useState(0);
     const [sponsorRadius, setSponsorRadius] = useState(0);
     const [sponsorAddress, setSponsorAddress] = useState('');
@@ -51,7 +52,7 @@ const HomeScreen = ({history}) => {
 
     // DELETE LEAGUE HANDLER
     const deleteHandler = (id) => {
-        if(window.confirm('Are you sure you want to delete this league?')) {
+        if (window.confirm('Are you sure you want to delete this league?')) {
             dispatch(deleteLeague(id));
         }
     };
@@ -59,14 +60,20 @@ const HomeScreen = ({history}) => {
     // SPONSOR LEAGUE FORM HANDLER
     const sponsorBtnHandler = () => {
         setSponsorBtn(!sponsorBtn);
+
+        if(sponsorReq === true){
+            setSponsorReq(false)
+        }
     };
 
     const submitSponsorReqHandler = () => {
-        setSponsorBtn(!sponsorBtn)
+        setSponsorBtn(!sponsorBtn);
+        setSponsorReq(!sponsorReq);
     };
 
     return (
         <>
+            {/*======== AVAILABLE LEAGUES ========*/}
             <Row className='align-items-center'>
                 <h3>Available Leagues</h3>
                 <Col className='text-right'>
@@ -78,11 +85,11 @@ const HomeScreen = ({history}) => {
                     </Button>
                 </Col>
             </Row>
-            { loadingDelete && <Loader /> }
-            { errorDelete && <p>{errorDelete}</p> }
+            {loadingDelete && <Loader/>}
+            {errorDelete && <p>{errorDelete}</p>}
 
-            { loadingCreate && <Loader /> }
-            { errorCreate && <p>{errorCreate}</p> }
+            {loadingCreate && <Loader/>}
+            {errorCreate && <p>{errorCreate}</p>}
 
             {loading ?
                 (<Loader/>)
@@ -106,9 +113,10 @@ const HomeScreen = ({history}) => {
                                     <td>${league.price}</td>
                                     <td>{league.location.city}, {league.location.state}</td>
                                     <td>
-                                    <Button variant='danger' className='btn-sm' onClick={()=> deleteHandler(league._id)}>
-                                        x
-                                    </Button>
+                                        <Button variant='danger' className='btn-sm'
+                                                onClick={() => deleteHandler(league._id)}>
+                                            x
+                                        </Button>
                                     </td>
                                 </tr>
                             )))}
@@ -196,27 +204,30 @@ const HomeScreen = ({history}) => {
                         </Form>
                     </>
                 </Col>
-            )
-            }
+            )}
 
-            {/*======== SPONSOR SUBMITTED INFO ========*/}
-            <h5>Search Requirements</h5>
-            <Table striped bordered hover responsive className='table-sm mb-5'>
-                <thead>
-                <tr>
-                    <th>BUDGET</th>
-                    <th>RADIUS</th>
-                    <th>LOCATION</th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{sponsorBudget}</td>
-                        <td>{sponsorRadius}</td>
-                        <td>{sponsorAddress}, {sponsorState}</td>
-                    </tr>
-                </tbody>
-            </Table>
+            {/*======== SPONSOR SEARCH REQUIREMENTS ========*/}
+            {sponsorReq ? (
+                <>
+                    <h5>Search Requirements</h5>
+                    <Table striped bordered hover responsive className='table-sm mb-5'>
+                        <thead>
+                        <tr>
+                            <th>BUDGET</th>
+                            <th>RADIUS</th>
+                            <th>STARTING LOCATION</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>${sponsorBudget}</td>
+                            <td>{sponsorRadius} miles</td>
+                            <td>{sponsorAddress}, {sponsorState}</td>
+                        </tr>
+                        </tbody>
+                    </Table>
+                </>
+            ):('') }
 
         </>
     )
