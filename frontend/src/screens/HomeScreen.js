@@ -5,7 +5,7 @@ import {Col, Row, Button, Table, Form} from 'react-bootstrap';
 import {createLeague, listLeagues, deleteLeague} from '../actions/leagueActions';
 import {LEAGUE_CREATE_RESET} from '../constants/leagueConstants';
 import {geocode} from '../components/GeoLocate';
-import {getPreciseDistance} from 'geolib';
+import {getDistance} from 'geolib';
 
 
 const HomeScreen = ({history}) => {
@@ -103,17 +103,14 @@ const HomeScreen = ({history}) => {
                 testLat = results[1];
                 testLon = results[0];
                 console.log(
-                    getPreciseDistance(
+                    getDistance(
                         {latitude: sponsorLat, longitude: sponsorLon},
                         {latitude: testLat, longitude: testLon}
                     ) / 1609
                 );
             });
         });
-
-
     };
-
 
 
     //=======================      BUDGET CALC/ LEAGUE RETURN      =================
@@ -170,7 +167,9 @@ const HomeScreen = ({history}) => {
                                 <th>LEAGUE NAME</th>
                                 <th>PRICE</th>
                                 <th>LOCATION</th>
-                                <th>  </th>
+                                {available &&
+                                    (<th>  </th>)
+                                }
                             </tr>
                             </thead>
                             {available ? (
