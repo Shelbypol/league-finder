@@ -139,7 +139,7 @@ const AddLeagueScreen = ({ match, history }) => {
                         </Form.Group>
 
 
-                        <Button type='submit' variant='primary'>Add League</Button>
+                        <Button type='button' variant='primary'>Add League</Button>
                     </Form>
                 ) }
             </Container>

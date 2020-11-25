@@ -53,7 +53,7 @@ const HomeScreen = ({history}) => {
     // DELETE LEAGUE HANDLER
     const deleteHandler = (id) => {
         // if (window.confirm('Are you sure you want to delete this league?')) {
-            dispatch(deleteLeague(id));
+        dispatch(deleteLeague(id));
         // }
     };
 
@@ -61,7 +61,7 @@ const HomeScreen = ({history}) => {
     const sponsorBtnHandler = () => {
         setSponsorBtn(!sponsorBtn);
 
-        if(sponsorReq === true){
+        if (sponsorReq === true) {
             setSponsorReq(false)
         }
     };
@@ -69,29 +69,30 @@ const HomeScreen = ({history}) => {
     const submitSponsorReqHandler = () => {
         setSponsorBtn(!sponsorBtn);
         setSponsorReq(!sponsorReq);
-        // ascendingPrice()
+        budgetCalc();
     };
 
 
-    // SORT LEAGUES PRICE / ASCENDING ORDER
-    // const ascendingPrice = () => {
-    //     // leagues.sort(function(a, b){return a-b});
-    //     // const sortedLeagues = [...leagues].sort();
-    //    const sortedLeagues = leagues.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-    //     console.log(sortedLeagues);
-    // };
+    const budgetCalc = () => {
+        let sponsorBudgetBucket = sponsorBudget;
 
+        let usedLeagues = [];
 
+        for (let i = 0; i <= leagues.length; i++) {
+            leagues.map(league => {
+                if (((sponsorBudgetBucket - league.price) >= 0 ) && (!usedLeagues.includes(league.name))) {
+                    sponsorBudgetBucket -= league.price;
+                    usedLeagues.push(league.name);
 
-    // const budgetCalc = () => {
-    //   let sponsorBudgetBucket = sponsorBudget;
-    //
-    //   for(sponsorBudgetBucket; sponsorBudgetBucket >= 0; sponsorBudgetBucket -= league.price ){
-    //       if(sponsorBudgetBucket >= 0){
-    //           console.log(league.name)
-    //       }
-    //   }
-    // };
+                    console.log('name: ' + league.name);
+                    console.log('price: ' + league.price);
+                    console.log('budget: ' + sponsorBudgetBucket);
+                    console.log('');
+                }
+            });
+        }
+    };
+
 
     return (
         <>
@@ -99,10 +100,10 @@ const HomeScreen = ({history}) => {
             <Row className='align-items-center'>
                 <h3>Available Leagues</h3>
                 <Col className='text-right'>
-                    <Button className='my-3' onClick={createLeagueHandler}>
+                    <Button className='my-3' type='button' onClick={createLeagueHandler}>
                         + Add League
                     </Button>
-                    <Button className='my-3 mx-1' onClick={sponsorBtnHandler}>
+                    <Button className='my-3 mx-1' type='button' onClick={sponsorBtnHandler}>
                         Find Leagues to Sponsor
                     </Button>
                 </Col>
@@ -249,7 +250,7 @@ const HomeScreen = ({history}) => {
                         </tbody>
                     </Table>
                 </>
-            ):('') }
+            ) : ('')}
 
         </>
     )
