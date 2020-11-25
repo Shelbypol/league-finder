@@ -14,15 +14,22 @@ const HomeScreen = ({history}) => {
     const [sponsorReq, setSponsorReq] = useState(false);
     const [sponsorBudget, setSponsorBudget] = useState(0);
     const [sponsorRadius, setSponsorRadius] = useState(0);
+
     const [sponsorAddress, setSponsorAddress] = useState('');
     const [sponsorCity, setSponsorCity] = useState('');
     const [sponsorState, setSponsorState] = useState('');
     const [sponsorPostal, setSponsorPostal] = useState('');
     const [sponsorCountry, setSponsorCountry] = useState('');
+
+    // const [leagueAddress, setLeagueAddress] = useState('');
+    // const [leagueCity, setLeagueCity] = useState('');
+    // const [leagueState, setLeagueState] = useState('');
+    // const [leaguePostal, setLeaguePostal] = useState('');
+    // const [leagueCountry, setLeagueCountry] = useState('');
+
     const [available, setAvailable] = useState(true);
     const [availableLeagues, setAvailableLeagues] = useState([]);
-    // const [sponsorLatLon, setSponsorLatLon] = useState();
-    // const [testLatLon, setTestLatLon] = useState();
+
     const [distance, setDistance] = useState(0);
 
     const dispatch = useDispatch();
@@ -80,38 +87,71 @@ const HomeScreen = ({history}) => {
 
     };
 
-    // SPONSOR INFO SUBMIT
+    // SPONSOR INFO SUBMIT HANLDER
     const submitSponsorReqHandler = () => {
         setSponsorBtn(!sponsorBtn);
         setSponsorReq(!sponsorReq);
         budgetCalc();
+        sponsorRequirements();
+    };
 
-        // =======================   DISTANCE      ==========================
+
+    // =======================   SPONSOR DISTANCE/BUDGET CALC     ==========================
+
+    const sponsorRequirements = () => {
         let sponsorLat = 0;
         let sponsorLon = 0;
-        let testLat = 0;
-        let testLon = 0;
+        let leagueLat = 0;
+        let leagueLon = 0;
+        let leagueStringAddress = '';
+        let sponsorRadiusLeagues = [];
 
         const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
 
         geocode(sponsorStringAddress).then(function (results) {
             sponsorLat = results[1];
             sponsorLon = results[0];
+            // for (let i = 0; i <= leagues.length; i++) {
+                leagues.map(league => {
 
-            const test = '13011, Kyle Seale Pkwy, San Antonio, TX, 78249, United States';
-            geocode(test).then(function (results) {
-                testLat = results[1];
-                testLon = results[0];
-                console.log(
-                    getDistance(
-                        {latitude: sponsorLat, longitude: sponsorLon},
-                        {latitude: testLat, longitude: testLon}
-                    ) / 1609
-                );
-            });
+                    leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
+
+                    // console.log(leagueStringAddress);
+
+                    geocode(leagueStringAddress).then(function (results) {
+                        leagueLat = results[1];
+                        leagueLon = results[0];
+
+                            console.log(league.name);
+                        console.log(
+                                getDistance(
+                                {latitude: sponsorLat, longitude: sponsorLon},
+                                {latitude: leagueLat, longitude: leagueLon}
+                                ) / 1609
+                        );
+
+                            console.log(leagueLat, leagueLon);
+                            console.log(leagueStringAddress);
+
+                    });
+                });
+            // }
+
+            // const test = '13011, Kyle Seale Pkwy, San Antonio, TX, 78249, United States';
+            // geocode(test).then(function (results) {
+            //     testLat = results[1];
+            //     testLon = results[0];
+            //
+            //
+            //     console.log(
+            //         getDistance(
+            //             {latitude: sponsorLat, longitude: sponsorLon},
+            //             {latitude: testLat, longitude: testLon}
+            //         ) / 1609
+            //     );
+            // });
         });
     };
-
 
     //=======================      BUDGET CALC/ LEAGUE RETURN      =================
     const budgetCalc = () => {
@@ -168,7 +208,7 @@ const HomeScreen = ({history}) => {
                                 <th>PRICE</th>
                                 <th>LOCATION</th>
                                 {available &&
-                                    (<th>  </th>)
+                                (<th></th>)
                                 }
                             </tr>
                             </thead>
