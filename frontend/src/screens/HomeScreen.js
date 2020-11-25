@@ -4,7 +4,9 @@ import Loader from '../components/Loader';
 import {Col, Row, Button, Table, Form} from 'react-bootstrap';
 import {createLeague, listLeagues, deleteLeague} from '../actions/leagueActions';
 import {LEAGUE_CREATE_RESET} from '../constants/leagueConstants';
-import { geocode } from "../components/GeoLocate";
+import { geocode } from '../components/GeoLocate';
+import {getDistance} from 'geolib';
+// import * as geolib from 'geolib';
 
 const HomeScreen = ({history}) => {
 
@@ -19,6 +21,8 @@ const HomeScreen = ({history}) => {
     const [sponsorCountry, setSponsorCountry] = useState('');
     const [available, setAvailable] = useState(true);
     const [availableLeagues, setAvailableLeagues] = useState([]);
+    const [sponsorLatLon, setSponsorLatLon] = useState([]);
+    const [testLatLon, setTestLatLon] = useState([]);
 
     const dispatch = useDispatch();
 
@@ -74,18 +78,42 @@ const HomeScreen = ({history}) => {
         setAvailable(true);
 
     };
+
+
     // SPONSOR INFO SUBMIT
     const submitSponsorReqHandler = () => {
         setSponsorBtn(!sponsorBtn);
         setSponsorReq(!sponsorReq);
         budgetCalc();
-        geocode(address).then(function(results) {
+    // =======================   SPONSOR   LAT / LON      ==========================
+        const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' +  sponsorCountry;
+        geocode(sponsorStringAddress).then(function(results) {
+            console.log('sponsor address');
             console.log(({lat: results[1], lon: results[0]}));
-    });
-    };
+            setSponsorLatLon(results);
+        });
 
-    // =======================      SEARCH RADIUS      ==========================
-    // sponsor lat/lon
+        const test = '13011, Kyle Seale Pkwy, San Antonio, TX, 78249, United States';
+        geocode(test).then(function(results) {
+            console.log('test address');
+            console.log(results);
+            console.log(({lat: results[1], lon: results[0]}));
+            setTestLatLon(results)
+        });
+
+     const dist =
+            getDistance(
+          { latitude: 29.794141, longitude: -98.743591 },
+            { latitude: 29.564572, longitude: -98.646396 }
+            );
+
+            const distanceInMiles = dist / 1609;
+console.log(distanceInMiles)
+
+
+    };
+    // =======================      RADIUS      ==========================
+
 
 
     //============================      BUDGET CALC/ LEAGUE RETURN      =================
@@ -285,6 +313,6 @@ const HomeScreen = ({history}) => {
             }
         </>
     )
-}
+};
 
     export default HomeScreen
