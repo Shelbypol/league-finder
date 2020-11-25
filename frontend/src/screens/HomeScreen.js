@@ -86,7 +86,7 @@ const HomeScreen = ({history}) => {
         setSponsorReq(!sponsorReq);
         budgetCalc();
 
-        // =======================   SPONSOR   LAT / LON      ==========================
+        // =======================   DISTANCE      ==========================
         let sponsorLat = 0;
         let sponsorLon = 0;
         let testLat = 0;
@@ -102,23 +102,21 @@ const HomeScreen = ({history}) => {
             geocode(test).then(function (results) {
                 testLat = results[1];
                 testLon = results[0];
-                // const distanceInMiles = dist / 1609;
                 console.log(
                     getPreciseDistance(
                         {latitude: sponsorLat, longitude: sponsorLon},
                         {latitude: testLat, longitude: testLon}
                     ) / 1609
                 );
-                // console.log(sponsorLon, sponsorLat, testLat, testLon);
             });
         });
 
 
     };
-    // =======================      RADIUS      ==========================
 
 
-    //============================      BUDGET CALC/ LEAGUE RETURN      =================
+
+    //=======================      BUDGET CALC/ LEAGUE RETURN      =================
     const budgetCalc = () => {
         let sponsorBudgetBucket = sponsorBudget;
 
@@ -134,7 +132,7 @@ const HomeScreen = ({history}) => {
     };
 
 
-    // ========================     RETURN        ===============================
+    // ========================    RETURN        ===============================
     return (
         <>
 
@@ -172,7 +170,7 @@ const HomeScreen = ({history}) => {
                                 <th>LEAGUE NAME</th>
                                 <th>PRICE</th>
                                 <th>LOCATION</th>
-                                <th></th>
+                                <th>  </th>
                             </tr>
                             </thead>
                             {available ? (
