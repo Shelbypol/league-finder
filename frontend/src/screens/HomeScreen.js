@@ -67,7 +67,6 @@ const HomeScreen = ({history}) => {
             setSponsorReq(false)
         }
 
-        console.log(sponsorBudget);
         setAvailableLeagues([]);
         setAvailable(true);
 
@@ -82,18 +81,15 @@ const HomeScreen = ({history}) => {
 
     const budgetCalc = () => {
         let sponsorBudgetBucket = sponsorBudget;
-        // let sponsorLeaguesBucket = [];
 
         for (let i = 0; i <= leagues.length; i++) {
             leagues.map(league => {
                 if (((sponsorBudgetBucket - league.price) >= 0) && (!availableLeagues.includes(league.name))) {
                     sponsorBudgetBucket -= league.price;
-                    // sponsorLeaguesBucket.push(league);
                     availableLeagues.push(league)
                 }
             });
         }
-        // setAvailableLeagues(sponsorLeaguesBucket);
         setAvailable(!available);
     };
 
