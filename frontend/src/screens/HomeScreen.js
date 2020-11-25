@@ -4,10 +4,11 @@ import Loader from '../components/Loader';
 import {Col, Row, Button, Table, Form} from 'react-bootstrap';
 import {createLeague, listLeagues, deleteLeague} from '../actions/leagueActions';
 import {LEAGUE_CREATE_RESET} from '../constants/leagueConstants';
+import Geocode from 'react-geocode';
+import dotenv from 'dotenv'
 
 const HomeScreen = ({history}) => {
 
-    // COMPONENT STATE
     const [sponsorBtn, setSponsorBtn] = useState(false);
     const [sponsorReq, setSponsorReq] = useState(false);
     const [sponsorBudget, setSponsorBudget] = useState(0);
@@ -34,6 +35,7 @@ const HomeScreen = ({history}) => {
     const leagueDelete = useSelector(state => state.leagueDelete);
     const {loading: loadingDelete, error: errorDelete, success: successDelete} = leagueDelete;
 
+    //============================      USE EFFECT      ==================================
     useEffect(() => {
         dispatch({type: LEAGUE_CREATE_RESET});
         dispatch(listLeagues());
@@ -46,6 +48,8 @@ const HomeScreen = ({history}) => {
         }
 
     }, [dispatch, history, successCreate, createdLeague, successDelete]);
+
+    //============================      HANDLERS      ==================================
 
     // CREATE LEAGUE HANDLER
     const createLeagueHandler = () => {
@@ -71,14 +75,14 @@ const HomeScreen = ({history}) => {
         setAvailable(true);
 
     };
-
+    // SPONSOR INFO SUBMIT
     const submitSponsorReqHandler = () => {
         setSponsorBtn(!sponsorBtn);
         setSponsorReq(!sponsorReq);
         budgetCalc();
     };
 
-
+    //============================      BUDGET CALC/ LEAGUE RETURN      =================
     const budgetCalc = () => {
         let sponsorBudgetBucket = sponsorBudget;
 
@@ -93,9 +97,26 @@ const HomeScreen = ({history}) => {
         setAvailable(!available);
     };
 
+    // =======================      SEARCH RADIUS      ==========================
+    Geocode.setApiKey(process.env.GEO_KEY);
+    Geocode.setRegion("es");
 
+    // Get latitude & longitude from address.
+    Geocode.fromAddress("Eiffel Tower").then(
+        response => {
+            const { lat, lng } = response.results[0].geometry.location;
+            console.log(lat, lng);
+        },
+        error => {
+            console.error(error);
+        }
+    );
+
+
+    // ========================     RETURN        ===============================
     return (
         <>
+
             {/*======== ALL LEAGUES ========*/}
             <Row className='align-items-center'>
                 {available ?
@@ -272,6 +293,6 @@ const HomeScreen = ({history}) => {
             }
         </>
     )
-};
+}
 
     export default HomeScreen
