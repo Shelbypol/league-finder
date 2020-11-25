@@ -4,8 +4,7 @@ import Loader from '../components/Loader';
 import {Col, Row, Button, Table, Form} from 'react-bootstrap';
 import {createLeague, listLeagues, deleteLeague} from '../actions/leagueActions';
 import {LEAGUE_CREATE_RESET} from '../constants/leagueConstants';
-import Geocode from 'react-geocode';
-import dotenv from 'dotenv'
+import { geocode } from "../components/GeoLocate";
 
 const HomeScreen = ({history}) => {
 
@@ -80,7 +79,14 @@ const HomeScreen = ({history}) => {
         setSponsorBtn(!sponsorBtn);
         setSponsorReq(!sponsorReq);
         budgetCalc();
+        geocode(address).then(function(results) {
+            console.log(({lat: results[1], lon: results[0]}));
+    });
     };
+
+    // =======================      SEARCH RADIUS      ==========================
+    // sponsor lat/lon
+
 
     //============================      BUDGET CALC/ LEAGUE RETURN      =================
     const budgetCalc = () => {
@@ -97,20 +103,6 @@ const HomeScreen = ({history}) => {
         setAvailable(!available);
     };
 
-    // =======================      SEARCH RADIUS      ==========================
-    Geocode.setApiKey(process.env.GEO_KEY);
-    Geocode.setRegion("es");
-
-    // Get latitude & longitude from address.
-    Geocode.fromAddress("Eiffel Tower").then(
-        response => {
-            const { lat, lng } = response.results[0].geometry.location;
-            console.log(lat, lng);
-        },
-        error => {
-            console.error(error);
-        }
-    );
 
 
     // ========================     RETURN        ===============================
