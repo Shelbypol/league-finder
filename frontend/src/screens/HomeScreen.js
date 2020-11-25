@@ -28,7 +28,9 @@ const HomeScreen = ({history}) => {
     // const [leagueCountry, setLeagueCountry] = useState('');
 
     const [available, setAvailable] = useState(true);
-    const [availableLeagues, setAvailableLeagues] = useState([]);
+    const [availableBudgetLeagues, setAvailableBudgetLeagues] = useState([]);
+    const [availableRadiusLeagues, setAvailableRadiusLeagues] = useState([]);
+    const [finalLeagues, setFinalLeagues]  = useState([]);
 
     const [distance, setDistance] = useState(0);
 
@@ -82,7 +84,8 @@ const HomeScreen = ({history}) => {
             setSponsorReq(false)
         }
 
-        setAvailableLeagues([]);
+        setAvailableBudgetLeagues([]);
+        setAvailableRadiusLeagues([]);
         setAvailable(true);
 
     };
@@ -93,6 +96,7 @@ const HomeScreen = ({history}) => {
         setSponsorReq(!sponsorReq);
         budgetCalc();
         sponsorRequirements();
+        compare();
     };
 
 
@@ -104,70 +108,63 @@ const HomeScreen = ({history}) => {
         let leagueLat = 0;
         let leagueLon = 0;
         let leagueStringAddress = '';
-        let sponsorRadiusLeagues = [];
 
         const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
 
         geocode(sponsorStringAddress).then(function (results) {
             sponsorLat = results[1];
             sponsorLon = results[0];
-            // for (let i = 0; i <= leagues.length; i++) {
+
                 leagues.map(league => {
 
                     leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
 
-                    // console.log(leagueStringAddress);
 
                     geocode(leagueStringAddress).then(function (results) {
                         leagueLat = results[1];
                         leagueLon = results[0];
 
-                            console.log(league.name);
-                        console.log(
+                        const distance = (
                                 getDistance(
                                 {latitude: sponsorLat, longitude: sponsorLon},
                                 {latitude: leagueLat, longitude: leagueLon}
                                 ) / 1609
                         );
 
-                            console.log(leagueLat, leagueLon);
-                            console.log(leagueStringAddress);
-
+                        if(distance < sponsorRadius){
+                            availableRadiusLeagues.push(league.name)
+                        }
                     });
                 });
-            // }
-
-            // const test = '13011, Kyle Seale Pkwy, San Antonio, TX, 78249, United States';
-            // geocode(test).then(function (results) {
-            //     testLat = results[1];
-            //     testLon = results[0];
-            //
-            //
-            //     console.log(
-            //         getDistance(
-            //             {latitude: sponsorLat, longitude: sponsorLon},
-            //             {latitude: testLat, longitude: testLon}
-            //         ) / 1609
-            //     );
-            // });
         });
     };
 
-    //=======================      BUDGET CALC/ LEAGUE RETURN      =================
+    //=======================      BUDGET CALC    =================
     const budgetCalc = () => {
         let sponsorBudgetBucket = sponsorBudget;
 
         for (let i = 0; i <= leagues.length; i++) {
             leagues.map(league => {
-                if (((sponsorBudgetBucket - league.price) >= 0) && (!availableLeagues.includes(league.name))) {
+                if (((sponsorBudgetBucket - league.price) >= 0) && (!availableBudgetLeagues.includes(league.name))) {
                     sponsorBudgetBucket -= league.price;
-                    availableLeagues.push(league)
+                    availableBudgetLeagues.push(league)
                 }
             });
         }
         setAvailable(!available);
     };
 
+    //=======================      FINAL BUDGET / LEAGUE ARRAY COMPARE      =================
+
+    const compare = () => {
+        availableRadiusLeagues.forEach( (e1) => availableBudgetLeagues.forEach((e2) => {
+            if(e1 === e2){
+                finalLeagues.push(e1)
+            }
+        }));
+        console.log(finalLeagues);
+        return finalLeagues;
+    };
 
     // ========================    RETURN        ===============================
     return (
@@ -232,7 +229,7 @@ const HomeScreen = ({history}) => {
                                 <>
                                     {/* LEAGUES W/IN SPONSOR BUDGET*/}
                                     <tbody>
-                                    {availableLeagues.map((league => (
+                                    {availableBudgetLeagues.map((league => (
                                         <tr key={league._id}>
                                             <td>{league.name}</td>
                                             <td>${league.price}</td>
