@@ -56,9 +56,12 @@ const HomeScreen = ({history}) => {
         } else {
             dispatch(listLeagues())
         }
+        // if(availableRadiusLeagues && finalLeagues){
+        //     console.log(finalLeagues);
+        //     return finalLeagues
+        // }
 
-
-    }, [dispatch, history, successCreate, createdLeague, successDelete, finalLeagues]);
+    }, [dispatch, history, successCreate, createdLeague, successDelete, finalLeagues, availableRadiusLeagues]);
 
     //============================      HANDLERS      ==================================
 
@@ -95,26 +98,29 @@ const HomeScreen = ({history}) => {
         setSponsorReq(!sponsorReq);
 
         budgetCalc();
-        sponsorCoords();
-        leagueCoords();
-        calcDistance();
-        radiusCalc();
+        sponsorRequirements();
+        // finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
 
-
-        finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
-
-        console.log('final');
-        console.log(finalLeagues);
-        console.log('budget');
-        console.log(availableBudgetLeagues);
-        console.log('radius');
-
-
-        console.log(availableRadiusLeagues);
+        // console.log('final');
+        // console.log(finalLeagues);
+        // console.log('budget');
+        // console.log(availableBudgetLeagues);
+        // console.log('radius');
+        // console.log(availableRadiusLeagues);
 
     };
 
     // =======================   SPONSOR DISTANCE/BUDGET CALC     ==========================
+
+    const sponsorRequirements = () => {
+        sponsorCoords();
+        leagues.map((league) => {
+            leagueCoords(league);
+            radiusCalc(league);
+        });
+            calcDistance();
+        finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
+    };
 
     // SPONSOR COORDS
     const sponsorCoords = () => {
@@ -127,36 +133,34 @@ const HomeScreen = ({history}) => {
     };
 
     // LEAGUE COORDS
-    const leagueCoords = () => {
-        leagues.map(league => {
+    const leagueCoords = (league) => {
+        let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
 
-            let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
-
-            geocode(leagueStringAddress).then(function (results) {
-                setLeagueLat(results[1]);
-                setLeagueLon(results[0]);
-            });
+        geocode(leagueStringAddress).then(function (results) {
+            setLeagueLat(results[1]);
+            setLeagueLon(results[0]);
         });
+
     };
 
     // DISTANCE
     const calcDistance = () => {
-        setDistance (
+        const radius = (
             getDistance(
                 {latitude: sponsorLat, longitude: sponsorLon},
                 {latitude: leagueLat, longitude: leagueLon}
             ) / 1609);
+       setDistance(radius);
     };
 
-    const radiusCalc = () => {
-        leagues.map(league => {
-            if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
-                return availableRadiusLeagues.push(league)
-            }
-        })
+    const radiusCalc = (league) => {
+        if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
+            // console.log(league.name);
+            // console.log(calcDistance())
+            // console.log(availableRadiusLeagues.push(league));
+           availableRadiusLeagues.push(league)
+        }
     };
-
-
 
 
     // // DISTANCE
@@ -292,7 +296,7 @@ const HomeScreen = ({history}) => {
                                 <th>PRICE</th>
                                 <th>LOCATION</th>
                                 {available &&
-                                (<th> </th>)
+                                (<th></th>)
                                 }
                             </tr>
                             </thead>
