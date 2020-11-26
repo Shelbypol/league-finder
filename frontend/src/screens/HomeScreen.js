@@ -21,6 +21,12 @@ const HomeScreen = ({history}) => {
     const [sponsorPostal, setSponsorPostal] = useState('');
     const [sponsorCountry, setSponsorCountry] = useState('');
 
+    const [sponsorLat, setSponsorLat] = useState(0);
+    const [sponsorLon, setSponsorLon] = useState(0);
+    const [leagueLat, setLeagueLat] = useState(0);
+    const [leagueLon, setLeagueLon] = useState(0);
+    const [distance, setDistance] = useState(0);
+
     const [available, setAvailable] = useState(true);
     const [availableBudgetLeagues, setAvailableBudgetLeagues] = useState([]);
     const [availableRadiusLeagues, setAvailableRadiusLeagues] = useState([]);
@@ -89,62 +95,111 @@ const HomeScreen = ({history}) => {
         setSponsorReq(!sponsorReq);
 
         budgetCalc();
-        sponsorRequirements();
+        sponsorCoords();
+        leagueCoords();
+        calcDistance();
+        radiusCalc();
+
+
         finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
-        //
+
         console.log('final');
         console.log(finalLeagues);
         console.log('budget');
         console.log(availableBudgetLeagues);
         console.log('radius');
-        setAvailableRadiusLeagues(availableRadiusLeagues);
+
+
         console.log(availableRadiusLeagues);
 
     };
 
     // =======================   SPONSOR DISTANCE/BUDGET CALC     ==========================
 
+    // SPONSOR COORDS
+    const sponsorCoords = () => {
+        const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
+
+        geocode(sponsorStringAddress).then(function (results) {
+            setSponsorLat(results[1]);
+            setSponsorLon(results[0]);
+        });
+    };
+
+    // LEAGUE COORDS
+    const leagueCoords = () => {
+        leagues.map(league => {
+
+            let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
+
+            geocode(leagueStringAddress).then(function (results) {
+                setLeagueLat(results[1]);
+                setLeagueLon(results[0]);
+            });
+        });
+    };
+
     // DISTANCE
-    const calcDistance = (sponsorLat, sponsorLon, leagueLat, leagueLon) => {
-        return (
+    const calcDistance = () => {
+        setDistance (
             getDistance(
                 {latitude: sponsorLat, longitude: sponsorLon},
                 {latitude: leagueLat, longitude: leagueLon}
             ) / 1609);
     };
 
-    const leagueCoords = (sponsorLat, sponsorLon) => {
+    const radiusCalc = () => {
         leagues.map(league => {
-            let leagueLat = 0;
-            let leagueLon = 0;
-            let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
-
-            geocode(leagueStringAddress).then(function (results) {
-                leagueLat = results[1];
-                leagueLon = results[0];
-
-                const distance = calcDistance(sponsorLat, sponsorLon, leagueLat, leagueLon);
-
-                if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
-                   return availableRadiusLeagues.push(league)
-                }
-            });
-        });
+            if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
+                return availableRadiusLeagues.push(league)
+            }
+        })
     };
 
-    const sponsorRequirements = () => {
-        let sponsorLat = 0;
-        let sponsorLon = 0;
 
-        const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
 
-        geocode(sponsorStringAddress).then(function (results) {
-            sponsorLat = results[1];
-            sponsorLon = results[0];
 
-            return leagueCoords(sponsorLat, sponsorLon)
-        });
-    };
+    // // DISTANCE
+    // const calcDistance = (sponsorLat, sponsorLon, leagueLat, leagueLon) => {
+    //     return (
+    //         getDistance(
+    //             {latitude: sponsorLat, longitude: sponsorLon},
+    //             {latitude: leagueLat, longitude: leagueLon}
+    //         ) / 1609);
+    // };
+    //
+    // const leagueCoords = (sponsorLat, sponsorLon) => {
+    //     leagues.map(league => {
+    //         let leagueLat = 0;
+    //         let leagueLon = 0;
+    //         let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
+    //
+    //         geocode(leagueStringAddress).then(function (results) {
+    //             leagueLat = results[1];
+    //             leagueLon = results[0];
+    //
+    //             const distance = calcDistance(sponsorLat, sponsorLon, leagueLat, leagueLon);
+    //
+    //             if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
+    //                return availableRadiusLeagues.push(league)
+    //             }
+    //         });
+    //     });
+    // };
+    //
+    // const sponsorRequirements = () => {
+    //     let sponsorLat = 0;
+    //     let sponsorLon = 0;
+    //
+    //     const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
+    //
+    //     geocode(sponsorStringAddress).then(function (results) {
+    //         sponsorLat = results[1];
+    //         sponsorLon = results[0];
+    //
+    //         return leagueCoords(sponsorLat, sponsorLon)
+    //     });
+    // };
 
 
     // =======================   copy of SPONSOR DISTANCE/BUDGET CALC     ==========================
