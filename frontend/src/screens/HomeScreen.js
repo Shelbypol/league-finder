@@ -56,12 +56,10 @@ const HomeScreen = ({history}) => {
         } else {
             dispatch(listLeagues())
         }
-        // if(availableRadiusLeagues && finalLeagues){
-        //     console.log(finalLeagues);
-        //     return finalLeagues
-        // }
 
-    }, [dispatch, history, successCreate, createdLeague, successDelete, finalLeagues, availableRadiusLeagues]);
+
+
+    }, [dispatch, history, successCreate, createdLeague, successDelete, finalLeagues ,availableRadiusLeagues, sponsorLon, sponsorLat, leagueLon, leagueLat]);
 
     //============================      HANDLERS      ==================================
 
@@ -93,21 +91,12 @@ const HomeScreen = ({history}) => {
     };
 
     // SPONSOR INFO SUBMIT HANDLER
+
     const submitSponsorReqHandler = () => {
         setSponsorBtn(!sponsorBtn);
         setSponsorReq(!sponsorReq);
-
         budgetCalc();
         sponsorRequirements();
-        // finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
-
-        // console.log('final');
-        // console.log(finalLeagues);
-        // console.log('budget');
-        // console.log(availableBudgetLeagues);
-        // console.log('radius');
-        // console.log(availableRadiusLeagues);
-
     };
 
     // =======================   SPONSOR DISTANCE/BUDGET CALC     ==========================
@@ -116,27 +105,43 @@ const HomeScreen = ({history}) => {
         sponsorCoords();
         leagues.map((league) => {
             leagueCoords(league);
-            radiusCalc(league);
-        });
+            // radiusCalc(league);
             calcDistance();
+            if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
+                availableRadiusLeagues.push(league)
+            }
+        });
         finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
+        console.log('final');
+        console.log(finalLeagues);
+        console.log('budget');
+        console.log(availableBudgetLeagues);
+        console.log('radius');
+        console.log(availableRadiusLeagues);
     };
 
     // SPONSOR COORDS
-    const sponsorCoords = () => {
+    const sponsorCoords = () => async (sponsorLat, sponsorLon) => {
+        // let arrLat = 0;
+        // let arrLon = 0;
         const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
-
-        geocode(sponsorStringAddress).then(function (results) {
+        await geocode(sponsorStringAddress).then(function (results) {
+            // arrLat = results[1];
+            // arrLon = results[0];
             setSponsorLat(results[1]);
             setSponsorLon(results[0]);
         });
     };
 
     // LEAGUE COORDS
-    const leagueCoords = (league) => {
+    const leagueCoords = (league)=> async (leagueLat, leagueLon) => {
+        // let arrLat = 0;
+        // let arrLon = 0;
         let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
 
-        geocode(leagueStringAddress).then(function (results) {
+        await geocode(leagueStringAddress).then(function (results) {
+            // arrLat = results[1];
+            // arrLon = results[0];
             setLeagueLat(results[1]);
             setLeagueLon(results[0]);
         });
@@ -144,23 +149,21 @@ const HomeScreen = ({history}) => {
     };
 
     // DISTANCE
-    const calcDistance = () => {
-        const radius = (
+    const calcDistance = () => async (sponsorLat, sponsorLon) => {
+        const radius = await(
             getDistance(
                 {latitude: sponsorLat, longitude: sponsorLon},
                 {latitude: leagueLat, longitude: leagueLon}
             ) / 1609);
-       setDistance(radius);
+        setDistance(radius);
     };
 
-    const radiusCalc = (league) => {
-        if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
-            // console.log(league.name);
-            // console.log(calcDistance())
-            // console.log(availableRadiusLeagues.push(league));
-           availableRadiusLeagues.push(league)
-        }
-    };
+
+    // const radiusCalc = (league) => {
+    //     if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
+    //         availableRadiusLeagues.push(league)
+    //     }
+    // };
 
 
     // // DISTANCE
