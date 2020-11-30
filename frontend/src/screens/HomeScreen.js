@@ -16,7 +16,7 @@ const HomeScreen = ({history}) => {
     const [sponsorReq, setSponsorReq] = useState(false);
     const [sponsorBudget, setSponsorBudget] = useState(0);
     const [sponsorRadius, setSponsorRadius] = useState(0);
-    // const [sponsorSubmit, setSponsorSubmit] = useState(false);
+    const [sponsorSubmit, setSponsorSubmit] = useState(false);
 
     const [sponsorAddress, setSponsorAddress] = useState('');
     const [sponsorCity, setSponsorCity] = useState('');
@@ -24,9 +24,9 @@ const HomeScreen = ({history}) => {
     const [sponsorPostal, setSponsorPostal] = useState('');
     const [sponsorCountry, setSponsorCountry] = useState('');
 
-    // const [sponsorLatLon, setSponsorLatLon] = useState(0);
+    // const [sponsorLatLon, setSponsorLatLon] = useState([]);
     // const [sponsorLon, setSponsorLon] = useState(0);
-    // const [leagueLatLon, setLeagueLatLon] = useState(0);
+    // const [leagueLatLon, setLeagueLatLon] = useState([]);
     // const [leagueLon, setLeagueLon] = useState(0);
     // const [distance, setDistance] = useState(0);
 
@@ -60,12 +60,11 @@ const HomeScreen = ({history}) => {
             dispatch(listLeagues())
         }
 
-        if(whatever){
-            setAvailableRadiusLeagues([]);
-            setFinalLeagues([]);
+        if(sponsorSubmit){
+            setAvailableRadiusLeagues([])
         }
 
-    }, [dispatch, history, successCreate, createdLeague, successDelete, availableRadiusLeagues, finalLeagues, whatever()]);
+    }, [dispatch, history, successCreate, createdLeague, successDelete, availableRadiusLeagues]);
 
     //============================      HANDLERS      ==================================
 
@@ -98,9 +97,11 @@ const HomeScreen = ({history}) => {
     const submitSponsorReqHandler = () => {
         setSponsorBtn(!sponsorBtn);
         setSponsorReq(!sponsorReq);
-        // sponsorRequirements();
+
         budgetCalc();
-        whatever();
+        sponsorRequirements();
+        setSponsorSubmit(true);
+
         finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
 
 
@@ -113,8 +114,9 @@ const HomeScreen = ({history}) => {
     };
 
     //====================================================================================
-    const whatever = () => {
-
+    const sponsorRequirements = () => {
+        let radiusLeagues = [];
+        let finalLeaguesArr = [];
         leagues.map((league) => {
 
             const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
@@ -127,19 +129,19 @@ const HomeScreen = ({history}) => {
 
                    const distance = haversineDistance(sponsorCoords, leagueCoords);
 
-                    if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
-                        availableRadiusLeagues.push(league)
+                    if ((distance <= sponsorRadius) && (!radiusLeagues.includes(league.name))) {
+                        radiusLeagues.push(league);
+                        return radiusLeagues;
                     }
-
 
                 });
             });
         });
-
-
-                    // finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
+                    return finalLeaguesArr.push(radiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
     };
-
+    // this.setState(() => ({
+    //     finalLeagues: this.state.finalLeagues(sponsorRequirements())
+    // }));
 
     //=======================      BUDGET CALC    =================
     const budgetCalc = () => {
@@ -193,7 +195,7 @@ const HomeScreen = ({history}) => {
                                 <th>PRICE</th>
                                 <th>LOCATION</th>
                                 {available &&
-                                (<th></th>)
+                                (<th> </th>)
                                 }
                             </tr>
                             </thead>
@@ -218,7 +220,7 @@ const HomeScreen = ({history}) => {
                                     {/* LEAGUES W/IN SPONSOR BUDGET*/}
                                     <tbody>
 
-                                    {finalLeagues.map((league => (
+                                    {availableBudgetLeagues.map((league => (
 
                                         <tr key={league._id}>
                                             <td>{league.name}</td>
