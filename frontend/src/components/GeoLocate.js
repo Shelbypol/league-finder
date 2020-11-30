@@ -36,3 +36,105 @@ export function haversineDistance(coords1, coords2) {
     console.log('d: ' + d);
     return d;
 }
+
+
+//==================================================================================
+
+// const sponsorRequirements = () => {
+//     sponsorCoords();
+//     leagues.map((league) => {
+//         leagueCoords(league);
+//         if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
+//             availableRadiusLeagues.push(league)
+//         }
+//     });
+//     finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
+//
+//     console.log('final');
+//     console.log(finalLeagues);
+//     console.log('budget');
+//     console.log(availableBudgetLeagues);
+//     console.log('radius');
+//     console.log(availableRadiusLeagues);
+// };
+//
+// // SPONSOR COORDS
+// const sponsorCoords = () => {
+//     const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
+//     geocode(sponsorStringAddress).then(function (results) {
+//         setSponsorLat(results[1]);
+//         setSponsorLon(results[0]);
+//     });
+// };
+//
+// // LEAGUE COORDS
+// const leagueCoords = (league) => {
+//     let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
+//     geocode(leagueStringAddress).then(function (results) {
+//         setLeagueLat(results[1]);
+//         setLeagueLon(results[0]);
+//         const radius = (
+//             getDistance(
+//                 {latitude: sponsorLat, longitude: sponsorLon},
+//                 {latitude: leagueLat, longitude: leagueLon}
+//             ) / 1609);
+//         setDistance(radius);
+//         calcDistance(sponsorLat, sponsorLon, leagueLat, leagueLon)
+//     });
+// };
+//
+// // DISTANCE
+// const calcDistance = (sponsorLat, sponsorLon, leagueLat, leagueLon) => {
+//     console.log('sponsor lat before: ' + sponsorLat);
+//     console.log('league lat before' + leagueLat);
+//     const radius = (
+//         getDistance(
+//             {latitude: sponsorLat, longitude: sponsorLon},
+//             {latitude: leagueLat, longitude: leagueLon}
+//         ) / 1609);
+//     console.log('radius: ' + radius);
+//     setDistance(radius);
+//     console.log('state dist after: ' + distance);
+//     // console.log(distance)
+// };
+
+// =======================   SPONSOR DISTANCE/BUDGET CALC     ==========================
+
+//
+// =======================   copy of SPONSOR DISTANCE/BUDGET CALC     ==========================
+
+// const sponsorRequirements = () => {
+//     let sponsorLatVar = 0;
+//     let sponsorLonVar = 0;
+//     let leagueLatVar = 0;
+//     let leagueLonVar = 0;
+//     let leagueStringAddress = '';
+//
+//     const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
+//
+//     geocode(sponsorStringAddress).then(function (results) {
+//         sponsorLatVar = results[1];
+//         sponsorLonVar = results[0];
+//
+//         leagues.map(league => {
+//
+//             leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
+//
+//             geocode(leagueStringAddress).then(function (results) {
+//                 leagueLatVar = results[1];
+//                 leagueLonVar = results[0];
+//
+//                 const distance = (
+//                     getDistance(
+//                         {latitude: sponsorLatVar, longitude: sponsorLonVar},
+//                         {latitude: leagueLatVar, longitude: leagueLonVar}
+//                     ) / 1609);
+//
+//                 if((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league))) {
+//                    availableRadiusLeagues.push(league);
+//                 }
+//                     finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
+//             });
+//         });
+//     });
+// };
