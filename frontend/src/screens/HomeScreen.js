@@ -7,6 +7,7 @@ import {createLeague, listLeagues, deleteLeague} from '../actions/leagueActions'
 import {LEAGUE_CREATE_RESET} from '../constants/leagueConstants';
 import {geocode} from '../components/GeoLocate';
 import {getDistance} from 'geolib';
+import {haversineDistance} from '../components/GeoLocate';
 
 
 const HomeScreen = ({history}) => {
@@ -92,8 +93,8 @@ const HomeScreen = ({history}) => {
     const submitSponsorReqHandler = () => {
         setSponsorBtn(!sponsorBtn);
         setSponsorReq(!sponsorReq);
-        // whatever();
-        sponsorRequirements();
+        whatever();
+        // sponsorRequirements();
         budgetCalc();
 
         console.log('final');
@@ -105,40 +106,38 @@ const HomeScreen = ({history}) => {
     };
 
     //====================================================================================
-// const whatever = () => {
-//
-//     leagues.map((league) => {
-//
-//         const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
-//         geocode(sponsorStringAddress).then(function (results) {
-//
-//             const sponsorLatCoord = (results[1]);
-//             const sponsorLonCoord = (results[0]);
-//
-//             let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
-//             geocode(leagueStringAddress).then(function (results) {
-//                 const leagueLatCoord = (results[1]);
-//                 const leagueLonCoord = (results[0]);
-//
-//                 if ((
-//                     getDistance(
-//                         {latitude: sponsorLatCoord, longitude: sponsorLonCoord},
-//                         {latitude: leagueLatCoord, longitude: leagueLonCoord}
-//                     ) / 1609 <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
-//                     availableRadiusLeagues.push(league)
-//                 }
-//             });
-//         });
-//     });
-//
-// finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
-//     console.log('final');
-//         console.log(finalLeagues);
-//         console.log('budget');
-//         console.log(availableBudgetLeagues);
-//         console.log('radius');
-//         console.log(availableRadiusLeagues);
-// };
+const whatever = () => {
+
+    leagues.map((league) => {
+
+        const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
+        geocode(sponsorStringAddress).then(function (results) {
+            const sponsorCoords =(results);
+            // const sponsorLonCoord =(results[0]);
+
+            let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
+            geocode(leagueStringAddress).then(function (results) {
+                const leagueCoords =(results);
+                // const leagueLonCoord =(results[0]);
+
+                // if ((
+                //     getDistance(
+                //         {latitude: sponsorLatCoord, longitude: sponsorLonCoord},
+                //         {latitude: leagueLatCoord, longitude: leagueLonCoord}
+                //     ) / 1609 <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
+                //     availableRadiusLeagues.push(league)
+                // }
+    haversineDistance(sponsorCoords, leagueCoords);
+
+        finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
+
+            });
+        });
+    });
+
+
+};
+
 
 
     //==================================================================================
@@ -203,56 +202,7 @@ const HomeScreen = ({history}) => {
 
     // =======================   SPONSOR DISTANCE/BUDGET CALC     ==========================
 
-    const sponsorRequirements = () => {
-        sponsorCoords();
-        leagues.map((league) => {
-            leagueCoords(league);
-            if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
-                availableRadiusLeagues.push(league)
-                calcDistance()
-            }
-        });
-        finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
-
-        console.log('final');
-        console.log(finalLeagues);
-        console.log('budget');
-        console.log(availableBudgetLeagues);
-        console.log('radius');
-        console.log(availableRadiusLeagues);
-    };
-
-    // SPONSOR COORDS
-    const sponsorCoords = async () => {
-        const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
-        const { results } = await (geocode(sponsorStringAddress).then(function (results) {}));
-            setSponsorLatLon( results )
-            // setSponsorLat(results[1]);
-            // setSponsorLon(results[0]);
-    };
-
-    // LEAGUE COORDS
-    const leagueCoords = (league) => async () => {
-        let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
-        const {results } = await (geocode(leagueStringAddress).then(function (results) {}));
-        setLeagueLatLon( results );
-            // setLeagueLat(results[1]);
-            // setLeagueLon(results[0]);
-    };
-
-    // DISTANCE
-    const calcDistance = async () => {
-
-        const { radius } = (
-            getDistance(
-                {latitude: sponsorLatLon[1], longitude: sponsorLatLon[0]},
-                {latitude: leagueLatLon[1], longitude: leagueLatLon[0]}
-            ) / 1609);
-
-        setDistance(radius);
-        // console.log(distance)
-    };
-
+    //
     // =======================   copy of SPONSOR DISTANCE/BUDGET CALC     ==========================
 
     // const sponsorRequirements = () => {
