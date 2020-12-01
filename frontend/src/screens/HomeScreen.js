@@ -24,11 +24,9 @@ const HomeScreen = ({history}) => {
     const [sponsorPostal, setSponsorPostal] = useState('');
     const [sponsorCountry, setSponsorCountry] = useState('');
 
-    // const [sponsorLatLon, setSponsorLatLon] = useState([]);
-    // const [sponsorLon, setSponsorLon] = useState(0);
-    // const [leagueLatLon, setLeagueLatLon] = useState([]);
-    // const [leagueLon, setLeagueLon] = useState(0);
-    // const [distance, setDistance] = useState(0);
+    const [sponsorCoords, setSponsorCoords] = useState([]);
+    const [leagueCoords, setLeagueCoords] = useState([]);
+    const [distance, setDistance] = useState(0);
 
     const [available, setAvailable] = useState(true);
     const [availableBudgetLeagues, setAvailableBudgetLeagues] = useState([]);
@@ -60,11 +58,8 @@ const HomeScreen = ({history}) => {
             dispatch(listLeagues())
         }
 
-        if(sponsorSubmit){
-            setAvailableRadiusLeagues([])
-        }
 
-    }, [dispatch, history, successCreate, createdLeague, successDelete, availableRadiusLeagues]);
+    }, [dispatch, history, successCreate, createdLeague, successDelete, sponsorSubmit, availableBudgetLeagues, availableRadiusLeagues, finalLeagues, distance]);
 
     //============================      HANDLERS      ==================================
 
@@ -98,50 +93,34 @@ const HomeScreen = ({history}) => {
         setSponsorBtn(!sponsorBtn);
         setSponsorReq(!sponsorReq);
 
-        budgetCalc();
         sponsorRequirements();
+        budgetCalc();
         setSponsorSubmit(true);
-
-        finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
-
-
-        console.log('final');
-        console.log(finalLeagues);
-        console.log('budget');
-        console.log(availableBudgetLeagues);
-        console.log('radius');
-        console.log(availableRadiusLeagues);
+        // finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
     };
 
     //====================================================================================
     const sponsorRequirements = () => {
-        let radiusLeagues = [];
-        let finalLeaguesArr = [];
         leagues.map((league) => {
 
             const sponsorStringAddress = sponsorAddress + ',' + sponsorCity + ',' + sponsorState + ',' + sponsorPostal + ',' + sponsorCountry;
             geocode(sponsorStringAddress).then(function (results) {
-                const sponsorCoords = (results);
+                setSponsorCoords(results);
 
                 let leagueStringAddress = league.location.address + ',' + league.location.city + ',' + league.location.state + ',' + league.location.postalCode + ',' + league.location.country;
                 geocode(leagueStringAddress).then(function (results) {
-                    const leagueCoords = (results);
+                    setLeagueCoords(results);
 
-                   const distance = haversineDistance(sponsorCoords, leagueCoords);
+                   setDistance(haversineDistance(sponsorCoords, leagueCoords));
 
-                    if ((distance <= sponsorRadius) && (!radiusLeagues.includes(league.name))) {
-                        radiusLeagues.push(league);
-                        return radiusLeagues;
+                    if ((distance <= sponsorRadius) && (!availableRadiusLeagues.includes(league.name))) {
+                        availableRadiusLeagues.push(league);
                     }
-
                 });
             });
         });
-                    return finalLeaguesArr.push(radiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
+                // finalLeagues.push(availableRadiusLeagues.filter(element => availableBudgetLeagues.includes(element)));
     };
-    // this.setState(() => ({
-    //     finalLeagues: this.state.finalLeagues(sponsorRequirements())
-    // }));
 
     //=======================      BUDGET CALC    =================
     const budgetCalc = () => {
@@ -220,7 +199,7 @@ const HomeScreen = ({history}) => {
                                     {/* LEAGUES W/IN SPONSOR BUDGET*/}
                                     <tbody>
 
-                                    {availableBudgetLeagues.map((league => (
+                                    {availableRadiusLeagues.map((league => (
 
                                         <tr key={league._id}>
                                             <td>{league.name}</td>
